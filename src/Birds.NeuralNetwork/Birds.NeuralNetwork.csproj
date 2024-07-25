@@ -1,0 +1,7 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <ItemGroup>
+      <ProjectReference Include="..\Birds.Core\Birds.Core.csproj" />
+    </ItemGroup>
+
+</Project>
