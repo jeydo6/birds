@@ -2,11 +2,11 @@ using System;
 
 namespace Birds.NeuralNetwork.Models;
 
-internal sealed class Network
+internal sealed class NeuralNetwork
 {
     private readonly Layer[] _layers;
 
-    private Network(Layer[] layers)
+    private NeuralNetwork(Layer[] layers)
         => _layers = layers;
 
     public float[] Propagate(float[] inputs)
@@ -19,7 +19,7 @@ internal sealed class Network
         return inputs;
     }
 
-    public static Network Create(int[] layerSizes)
+    public static NeuralNetwork Create(int[] layerSizes)
     {
         if (layerSizes.Length < 2)
             throw new Exception("Неверное количество слоёв");
@@ -32,6 +32,6 @@ internal sealed class Network
 
         layers[^1] = Layer.Create(layerSizes[^1], 1);
 
-        return new Network(layers);
+        return new NeuralNetwork(layers);
     }
 }

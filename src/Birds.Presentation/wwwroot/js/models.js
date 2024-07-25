@@ -41,8 +41,8 @@ class World {
         const animalsCount = 40;
         const animals = this.#createAnimals(animalsCount);
 
-        const foodsCount = 60;
         // const foodsCount = 1;
+        const foodsCount = 60;
         const foods = this.#createFoods(foodsCount);
 
         return new World(animals, foods);
@@ -50,11 +50,9 @@ class World {
 
     static #createAnimals(count) {
 
-        const eye = Eye.create();
-
         const animals = new Array(count);
         for (let i = 0; i < count; i++) {
-            animals[i] = Animal.create(eye);
+            animals[i] = Animal.create();
         }
 
         return animals;
@@ -103,10 +101,12 @@ class Animal {
         else return value;
     }
 
-    static create(eye) {
+    static create() {
         const position = Point.create();
         const rotation = Math.random();
         const speed = 0.002;
+
+        const eye = Eye.create();
 
         return new Animal(position, rotation, speed, eye);
     }
@@ -172,11 +172,15 @@ class Eye {
 
     static create() {
         const fovRange = 0.25;
-        const fovAngle = Math.PI;
+        const fovAngle = Math.PI / 4;
         const cellsCount = 6;
 
         return new Eye(fovRange, fovAngle, cellsCount);
     }
+}
+
+class Brain {
+    // TODO: Implement Network.cs
 }
 
 class Food {
@@ -204,3 +208,5 @@ class Point {
         return new Point(x, y);
     }
 }
+
+// TODO: Create Simulation on Backend-side?

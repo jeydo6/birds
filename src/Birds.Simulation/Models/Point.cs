@@ -16,8 +16,8 @@ public readonly struct Point
 
     public static Point Create()
     {
-        var x = Random.Shared.NextSingle(6);
-        var y = Random.Shared.NextSingle(6);
+        var x = Random.Shared.NextUSingle(6);
+        var y = Random.Shared.NextUSingle(6);
 
         return new Point(x, y);
     }
