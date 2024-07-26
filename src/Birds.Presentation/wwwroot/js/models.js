@@ -35,49 +35,29 @@ class World {
         }
     }
 
-    static create() {
+    static fromJson(json) {
+        const animals = [];
+        for (const jsonAnimal of json.animals) {
+            animals.push(Animal.fromJson(jsonAnimal));
+        }
 
-        // const animalsCount = 1;
-        const animalsCount = 40;
-        const animals = this.#createAnimals(animalsCount);
-
-        // const foodsCount = 1;
-        const foodsCount = 60;
-        const foods = this.#createFoods(foodsCount);
+        const foods = [];
+        for (const jsonFood of json.foods) {
+            foods.push(Food.fromJson(jsonFood));
+        }
 
         return new World(animals, foods);
-    }
-
-    static #createAnimals(count) {
-
-        const animals = new Array(count);
-        for (let i = 0; i < count; i++) {
-            animals[i] = Animal.create();
-        }
-
-        return animals;
-    }
-
-    static #createFoods(count) {
-
-        const foods = new Array(count);
-        for (let i = 0; i < count; i++) {
-            foods[i] = Food.create();
-        }
-
-        return foods;
     }
 }
 
 class Animal {
 
-    #eye;
-
-    constructor(position, rotation, speed, eye) {
+    constructor(position, rotation, speed, eye, brain) {
         this.position = position;
         this.rotation = rotation;
         this.speed = speed;
-        this.#eye = eye;
+        this.eye = eye;
+        this.brain = brain;
     }
 
     processMovement() {
@@ -88,11 +68,14 @@ class Animal {
     }
 
     processVision(foods) {
-        return this.#eye.processVision(this.position, this.rotation, foods);
+        const vision = this.eye.processVision(this.position, this.rotation, foods);
+        // const response = this.#brain.propagate(vision);
+
+        return this.brain.propagate(vision);
     }
 
     calculateDistance(food) {
-        return this.#eye.calculateDistance(this.position, food.position);
+        return this.eye.calculateDistance(this.position, food.position);
     }
 
     #wrapPosition(value) {
@@ -101,28 +84,56 @@ class Animal {
         else return value;
     }
 
-    static create() {
-        const position = Point.create();
-        const rotation = Math.random();
-        const speed = 0.002;
+    static fromJson(json) {
+        const position = Point.fromJson(json.position);
+        const rotation = json.rotation
+        const speed = json.speed;
 
-        const eye = Eye.create();
+        const eye = Eye.fromJson(json.eye);
+        const brain = NeuralNetwork.fromJson(json.brain);
 
-        return new Animal(position, rotation, speed, eye);
+        return new Animal(position, rotation, speed, eye, brain);
+    }
+}
+
+class Food {
+
+    constructor(position) {
+        this.position = position;
+    }
+
+    static fromJson(json) {
+        const position = Point.fromJson(json.position);
+
+        return new Food(position);
+    }
+}
+
+class Point {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    static fromJson(json) {
+        const x = json.x;
+        const y = json.y;
+
+        return new Point(x, y);
     }
 }
 
 class Eye {
 
-    constructor(fovRange, fovAngle, cellsCount) {
-        this.fovRange = fovRange;
-        this.fovAngle = fovAngle;
+    constructor(range, angle, cellsCount) {
+        this.range = range;
+        this.angle = angle;
         this.cellsCount = cellsCount;
     }
 
     processVision(position, rotation, foods) {
 
-        const angleStep = this.fovAngle / this.cellsCount;
+        const angleStep = this.angle / this.cellsCount;
 
         const cells = new Array(this.cellsCount);
         for (let i = 0; i < this.cellsCount; i++) {
@@ -131,17 +142,17 @@ class Eye {
 
         for (const food of foods) {
             const distance = this.calculateDistance(position, food.position);
-            if (distance > this.fovRange)
+            if (distance > this.range)
                 continue;
 
             const angle = this.#wrapAngle(this.calculateAngle(position, food.position) - rotation * 2.0 * Math.PI);
-            if (angle < -this.fovAngle / 2.0 || angle > this.fovAngle / 2.0)
+            if (angle < -this.angle / 2.0 || angle > this.angle / 2.0)
                 continue;
 
-            const normAngle = angle + this.fovAngle / 2.0;
+            const normAngle = angle + this.angle / 2.0;
             for (let i = 0.0; i < this.cellsCount; i++) {
                 if (normAngle >= i * angleStep && normAngle <= (i + 1) * angleStep) {
-                    cells[this.cellsCount - 1 - i] += (this.fovRange - distance) / this.fovRange;
+                    cells[this.cellsCount - 1 - i] += (this.range - distance) / this.range;
                     break;
                 }
             }
@@ -170,43 +181,98 @@ class Eye {
         else return value;
     }
 
-    static create() {
-        const fovRange = 0.25;
-        const fovAngle = Math.PI / 4;
-        const cellsCount = 6;
+    static fromJson(json) {
+        const range = json.range;
+        const angle = json.angle;
+        const cellsCount = json.cellsCount;
 
-        return new Eye(fovRange, fovAngle, cellsCount);
+        return new Eye(range, angle, cellsCount);
     }
 }
 
-class Brain {
-    // TODO: Implement Network.cs
-}
+class NeuralNetwork {
 
-class Food {
-    constructor(position) {
-        this.position = position;
+    constructor(layers) {
+        this.layers = layers;
     }
 
-    static create() {
-        const position = Point.create();
+    propagate(inputs) {
 
-        return new Food(position);
-    }
-}
+        let outputs = inputs;
+        for (let i = 0; i < this.layers.length; i++) {
+            outputs = this.layers[i].propagate(outputs);
+        }
 
-class Point {
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
+        return outputs;
     }
 
-    static create() {
-        const x = Math.random();
-        const y = Math.random();
+    static fromJson(json) {
+        const layers = [];
+        for (const jsonLayer of json.layers) {
+            layers.push(Layer.fromJson(jsonLayer));
+        }
 
-        return new Point(x, y);
+        return new NeuralNetwork(layers);
     }
 }
 
-// TODO: Create Simulation on Backend-side?
+class Layer {
+
+    constructor(neurons) {
+        this.neurons = neurons;
+    }
+
+    propagate(inputs) {
+
+        const outputs = new Array(this.neurons.length);
+        for (let i = 0; i < outputs.length; i++) {
+            outputs[i] = this.neurons[i].propagate(inputs);
+        }
+
+        return outputs;
+    }
+
+    static fromJson(json) {
+
+        const neurons = [];
+        for (const jsonNeuron of json.neurons) {
+            neurons.push(Neuron.fromJson(jsonNeuron));
+        }
+
+        return new Layer(neurons);
+    }
+}
+
+class Neuron {
+
+    constructor(bias, weights) {
+        this.bias = bias;
+        this.weights = weights;
+    }
+
+    propagate(inputs) {
+
+        if (inputs.length !== this.weights.length) {
+            throw new Error("Количество входных параметров не равно количеству весов");
+        }
+
+        let output = this.bias;
+        for (let i = 0; i < inputs.length; i++) {
+            output += inputs[i] * this.weights[i];
+        }
+
+        return output > 0 ? output : 0;
+    }
+
+    static fromJson(json) {
+
+        const bias = json.bias;
+
+        const weights = [];
+        for (const jsonWeight of json.weights) {
+            weights.push(jsonWeight);
+        }
+
+        return new Neuron(bias, weights);
+    }
+}

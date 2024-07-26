@@ -9,18 +9,20 @@ viewport.height = viewportHeight * viewportScale;
 viewport.style.width = viewportWidth + "px";
 viewport.style.height = viewportHeight + "px";
 
-function main() {
+async function main() {
     const context = viewport.getContext("2d");
     context.scale(viewportScale, viewportScale);
 
-    const world = World.create();
+    const world = await fetch("api/world")
+        .then(response => response.json())
+        .then(jsonWorld => World.fromJson(jsonWorld));
 
     setInterval(() => {
         requestAnimationFrame(() => {
             world.process();
             context.drawWorld(world);
         })
-    }, 40);
+    }, 100);
 }
 
-main();
+main().then();
