@@ -1,23 +1,13 @@
 using System;
 
-namespace Birds.NeuralNetwork.Models;
+namespace Birds.Simulation.Models;
 
-internal sealed class NeuralNetwork
+public sealed class NeuralNetwork
 {
-    private readonly Layer[] _layers;
-
     private NeuralNetwork(Layer[] layers)
-        => _layers = layers;
+        => Layers = layers;
 
-    public float[] Propagate(float[] inputs)
-    {
-        for (var i = 0; i < _layers.Length; i++)
-        {
-            inputs = _layers[i].Propagate(inputs);
-        }
-
-        return inputs;
-    }
+    public Layer[] Layers { get; }
 
     public static NeuralNetwork Create(int[] layerSizes)
     {
