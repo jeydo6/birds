@@ -4,23 +4,23 @@ namespace Birds.Simulation.Models;
 
 public sealed class Eye
 {
-    private Eye(float range, float angle, int cellsCount)
+    private Eye(float fovRange, float fovAngle, int cellsCount)
     {
-        Range = range;
-        Angle = angle;
+        FovRange = fovRange;
+        FovAngle = fovAngle;
         CellsCount = cellsCount;
     }
 
-    public float Range { get; }
-    public float Angle { get; }
+    public float FovRange { get; }
+    public float FovAngle { get; }
     public int CellsCount { get; }
 
     public static Eye Create()
     {
-        const float range = 0.25f;
-        const float angle = (float)Math.PI / 4.0f;
+        const float fovRange = 0.25f;
+        const float fovAngle = (float)Math.PI / 2.0f;
         const int cellsCount = 6;
 
-        return new Eye(range, angle, cellsCount);
+        return new Eye(fovRange, fovAngle, cellsCount);
     }
 }

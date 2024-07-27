@@ -1,0 +1,13 @@
+Animal.POSITION_MIN = 0.0;
+Animal.POSITION_MAX = 1.0;
+
+Animal.ROTATION_MIN = 0.0;
+Animal.ROTATION_MAX = 1.0;
+Animal.ROTATION_ACCELERATION = 0.25;
+
+Animal.SPEED_MIN = 0.001;
+Animal.SPEED_MAX = 0.005;
+Animal.SPEED_ACCELERATION = 0.002;
+
+Eye.MIN_ANGLE = 0.0;
+Eye.MAX_ANGLE = Math.PI * 2.0;

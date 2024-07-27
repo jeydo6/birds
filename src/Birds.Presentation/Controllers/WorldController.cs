@@ -11,4 +11,8 @@ public sealed class WorldController
     [HttpGet]
     public World CreateWorld(CancellationToken cancellationToken)
         => World.Create();
+
+    [HttpPost]
+    public World IterateWorld(World world, CancellationToken cancellationToken)
+        => world;
 }

@@ -36,6 +36,7 @@ class World {
     }
 
     static fromJson(json) {
+
         const animals = [];
         for (const jsonAnimal of json.animals) {
             animals.push(Animal.fromJson(jsonAnimal));
@@ -63,24 +64,34 @@ class Animal {
     processMovement() {
         const rotation = this.rotation * Math.PI * 2.0;
 
-        this.position.x = this.#wrapPosition(this.position.x + Math.cos(rotation) * this.speed);
-        this.position.y = this.#wrapPosition(this.position.y - Math.sin(rotation) * this.speed);
+        this.position.x = this.#wrap(this.position.x + Math.cos(rotation) * this.speed, Animal.POSITION_MIN, Animal.POSITION_MAX);
+        this.position.y = this.#wrap(this.position.y - Math.sin(rotation) * this.speed, Animal.POSITION_MIN, Animal.POSITION_MAX);
     }
 
     processVision(foods) {
         const vision = this.eye.processVision(this.position, this.rotation, foods);
-        // const response = this.#brain.propagate(vision);
+        const response = this.brain.propagate(vision);
 
-        return this.brain.propagate(vision);
+        const speedAcceleration = this.#clamp(response[0], -Animal.SPEED_ACCELERATION, Animal.SPEED_ACCELERATION);
+        const rotationAcceleration = this.#clamp(response[1], -Animal.ROTATION_ACCELERATION, Animal.ROTATION_ACCELERATION);
+
+        this.speed = this.#clamp(this.speed + speedAcceleration, Animal.SPEED_MIN, Animal.SPEED_MAX);
+        this.rotation = this.#wrap(this.rotation + rotationAcceleration, Animal.ROTATION_MIN, Animal.ROTATION_MAX);
     }
 
     calculateDistance(food) {
         return this.eye.calculateDistance(this.position, food.position);
     }
 
-    #wrapPosition(value) {
-        if (value > 1.0) return value - 1.0;
-        else if (value < 0.0) return value + 1.0;
+    #wrap(value, minValue, maxValue) {
+        if (value >= maxValue) return value - (maxValue - minValue);
+        else if (value < minValue) return value + (maxValue - minValue);
+        else return value;
+    }
+
+    #clamp(value, minValue, maxValue) {
+        if (value < minValue) return minValue
+        else if (value > maxValue) return maxValue
         else return value;
     }
 
@@ -125,15 +136,15 @@ class Point {
 
 class Eye {
 
-    constructor(range, angle, cellsCount) {
-        this.range = range;
-        this.angle = angle;
+    constructor(fovRange, fovAngle, cellsCount) {
+        this.fovRange = fovRange;
+        this.fovAngle = fovAngle;
         this.cellsCount = cellsCount;
     }
 
     processVision(position, rotation, foods) {
 
-        const angleStep = this.angle / this.cellsCount;
+        const angleStep = this.fovAngle / this.cellsCount;
 
         const cells = new Array(this.cellsCount);
         for (let i = 0; i < this.cellsCount; i++) {
@@ -142,17 +153,17 @@ class Eye {
 
         for (const food of foods) {
             const distance = this.calculateDistance(position, food.position);
-            if (distance > this.range)
+            if (distance > this.fovRange)
                 continue;
 
-            const angle = this.#wrapAngle(this.calculateAngle(position, food.position) - rotation * 2.0 * Math.PI);
-            if (angle < -this.angle / 2.0 || angle > this.angle / 2.0)
+            const angle = this.#wrap(this.calculateAngle(position, food.position) - rotation * Eye.MAX_ANGLE, Eye.MIN_ANGLE, Eye.MAX_ANGLE);
+            const normAngle = this.#wrap(angle + this.fovAngle / 2.0, Eye.MIN_ANGLE, Eye.MAX_ANGLE);
+            if (normAngle > this.fovAngle)
                 continue;
 
-            const normAngle = angle + this.angle / 2.0;
             for (let i = 0.0; i < this.cellsCount; i++) {
                 if (normAngle >= i * angleStep && normAngle <= (i + 1) * angleStep) {
-                    cells[this.cellsCount - 1 - i] += (this.range - distance) / this.range;
+                    cells[this.cellsCount - 1 - i] += (this.fovRange - distance) / this.fovRange;
                     break;
                 }
             }
@@ -175,18 +186,18 @@ class Eye {
         return Math.atan2(-dy, dx);
     }
 
-    #wrapAngle(value) {
-        if (value > Math.PI) return 2.0 * Math.PI - value;
-        else if (value < -Math.PI) return 2.0 * Math.PI + value;
+    #wrap(value, minValue, maxValue) {
+        if (value >= maxValue) return value - (maxValue - minValue);
+        else if (value < minValue) return value + (maxValue - minValue);
         else return value;
     }
 
     static fromJson(json) {
-        const range = json.range;
-        const angle = json.angle;
+        const fovRange = json.fovRange;
+        const fovAngle = json.fovAngle;
         const cellsCount = json.cellsCount;
 
-        return new Eye(range, angle, cellsCount);
+        return new Eye(fovRange, fovAngle, cellsCount);
     }
 }
 
