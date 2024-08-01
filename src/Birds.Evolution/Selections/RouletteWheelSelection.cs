@@ -14,7 +14,7 @@ internal sealed class RouletteWheelSelection : ISelection
         var totalFitness = 0f;
         for (var i = 0; i < population.Length; i++)
         {
-            totalFitness += population[i].Fitness();
+            totalFitness += population[i].Fitness;
         }
 
         var targetFitness = Random.Shared.NextUSingle(6) * totalFitness;
@@ -22,7 +22,7 @@ internal sealed class RouletteWheelSelection : ISelection
         var currentFitness = 0f;
         for (var i = 0; i < population.Length; i++)
         {
-            currentFitness += population[i].Fitness();
+            currentFitness += population[i].Fitness;
             if (currentFitness >= targetFitness)
                 return population[i];
         }

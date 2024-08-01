@@ -1,3 +1,5 @@
+World.AGE_MAX = 1000;
+
 Animal.POSITION_MIN = 0.0;
 Animal.POSITION_MAX = 1.0;
 

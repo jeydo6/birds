@@ -2,15 +2,15 @@ namespace Birds.Simulation.Models;
 
 public sealed class Food
 {
-    private Food(Point position)
-        => Position = position;
+    public required Point Position { get; init; }
 
-    public Point Position { get; }
-
-    public static Food Create()
+    public static Food Random()
     {
-        var position = Point.Create();
+        var position = Point.Random();
 
-        return new Food(position);
+        return new Food
+        {
+            Position = position
+        };
     }
 }

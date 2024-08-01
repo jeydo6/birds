@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Birds.Presentation;
+namespace Birds.Simulation;
 
 internal static class Program
 {
@@ -32,20 +32,3 @@ internal static class Program
         app.Run();
     }
 }
-
-
-// internal class Individual : IIndividual
-// {
-//     public float[] Genes { get; init; } = Array.Empty<float>();
-//
-//     public float Fitness()
-//     {
-//         var result = 0f;
-//         for (var i = 0; i < Genes.Length; i++)
-//         {
-//             result += Genes[i];
-//         }
-//
-//         return result;
-//     }
-// }

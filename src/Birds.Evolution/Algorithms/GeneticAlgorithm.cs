@@ -7,6 +7,7 @@ using Birds.Evolution.Selections;
 namespace Birds.Evolution.Algorithms;
 
 public interface IGeneticAlgorithm<TIndividual>
+    where TIndividual : IIndividual
 {
     public TIndividual[] Evolve(TIndividual[] population);
 }

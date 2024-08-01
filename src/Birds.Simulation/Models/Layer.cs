@@ -1,20 +1,52 @@
+using System;
+using System.Collections.Generic;
+
 namespace Birds.Simulation.Models;
 
 public sealed class Layer
 {
-    private Layer(Neuron[] neurons)
-        => Neurons = neurons;
+    public required Neuron[] Neurons { get; init; }
 
-    public Neuron[] Neurons { get; }
+    public IEnumerable<float> ToWeights()
+    {
+        for (var i = 0; i < Neurons.Length; i++)
+        {
+            foreach (var weight in Neurons[i].ToWeights())
+            {
+                yield return weight;
+            }
+        }
+    }
 
-    public static Layer Create(int inputsCount, int outputsCount)
+    public static Layer FromWeights(int inputsCount, int outputsCount, Span<float> weights)
+    {
+        var neurons = new Neuron[outputsCount];
+
+        var start = 0;
+        for (var i = 0; i < neurons.Length; i++)
+        {
+            var length = inputsCount + 1;
+            neurons[i] = Neuron.FromWeights(inputsCount, weights.Slice(start, length));
+            start += length;
+        }
+
+        return new Layer
+        {
+            Neurons = neurons
+        };
+    }
+
+    public static Layer Random(int inputsCount, int outputsCount)
     {
         var neurons = new Neuron[outputsCount];
         for (var i = 0; i < neurons.Length; i++)
         {
-            neurons[i] = Neuron.Create(inputsCount);
+            neurons[i] = Neuron.Random(inputsCount);
         }
 
-        return new Layer(neurons);
+        return new Layer
+        {
+            Neurons = neurons
+        };
     }
 }

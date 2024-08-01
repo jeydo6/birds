@@ -1,36 +1,59 @@
-using System;
 using Birds.Core.Extensions;
 
 namespace Birds.Simulation.Models;
 
 public sealed class Animal
 {
-    private Animal(Point position, float rotation, float speed, Eye eye, NeuralNetwork brain)
-    {
-        Position = position;
-        Rotation = rotation;
-        Speed = speed;
-        Eye = eye;
-        Brain = brain;
-    }
+    public required Point Position { get; init; }
+    public required float Rotation { get; init; }
+    public required float Speed { get; init; }
+    public required Eye Eye { get; init; }
+    public required NeuralNetwork Brain { get; init; }
 
-    public Point Position { get; }
-    public float Rotation { get; }
-    public float Speed { get; }
-    public Eye Eye { get; }
-    public NeuralNetwork Brain { get; }
+    public int Satiation { get; set; }
 
-    public static Animal Create()
+    public float[] ToGenes()
+        => Brain.ToWeights();
+
+    public static Animal FromGenes(float[] genes)
     {
-        var position = Point.Create();
-        var rotation = Random.Shared.NextUSingle(6);
+        var position = Point.Random();
+        var rotation = System.Random.Shared.NextUSingle(6);
         const float speed = 0.002f;
 
         var eye = Eye.Create();
 
         var layerSizes = new int[] { eye.CellsCount, 2 * eye.CellsCount, 2 };
-        var brain = NeuralNetwork.Create(layerSizes);
+        var brain = NeuralNetwork.FromWeights(layerSizes, weights: genes);
 
-        return new Animal(position, rotation, speed, eye, brain);
+        return new Animal
+        {
+            Position = position,
+            Rotation = rotation,
+            Speed = speed,
+            Eye = eye,
+            Brain = brain
+        };
+    }
+
+    public static Animal Random()
+    {
+        var position = Point.Random();
+        var rotation = System.Random.Shared.NextUSingle(6);
+        const float speed = 0.002f;
+
+        var eye = Eye.Create();
+
+        var layerSizes = new int[] { eye.CellsCount, 2 * eye.CellsCount, 2 };
+        var brain = NeuralNetwork.Random(layerSizes);
+
+        return new Animal
+        {
+            Position = position,
+            Rotation = rotation,
+            Speed = speed,
+            Eye = eye,
+            Brain = brain
+        };
     }
 }

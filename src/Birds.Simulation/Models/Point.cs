@@ -1,24 +1,21 @@
-using System;
 using Birds.Core.Extensions;
 
 namespace Birds.Simulation.Models;
 
 public readonly struct Point
 {
-    private Point(float x, float y)
+    public required float X { get; init; }
+    public required float Y { get; init; }
+
+    public static Point Random()
     {
-        X = x;
-        Y = y;
-    }
+        var x = System.Random.Shared.NextUSingle(6);
+        var y = System.Random.Shared.NextUSingle(6);
 
-    public float X { get; }
-    public float Y { get; }
-
-    public static Point Create()
-    {
-        var x = Random.Shared.NextUSingle(6);
-        var y = Random.Shared.NextUSingle(6);
-
-        return new Point(x, y);
+        return new Point
+        {
+            X = x,
+            Y = y
+        };
     }
 }

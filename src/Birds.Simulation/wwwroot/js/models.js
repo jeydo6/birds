@@ -1,13 +1,76 @@
+class Simulation {
+
+    constructor() {
+        this.world = null;
+        this.generation = 0;
+        this.satiation = 0;
+    }
+
+    async process() {
+        if (!this.world) {
+            await this.#createWorld();
+        }
+
+        if (this.world.age > World.AGE_MAX) {
+            let satiation = 0;
+            for (const animal of this.world.animals) {
+                satiation += animal.satiation;
+            }
+
+            await this.#evolveWorld();
+
+            this.satiation = satiation;
+            this.generation++;
+        }
+
+        this.world.process();
+    }
+
+    getTitle() {
+        return `Generation ${this.generation} (${this.satiation})`;
+    }
+
+    #createWorld() {
+        const requestOptions = {
+            method: "GET"
+        };
+
+        return fetch("api/world/create", requestOptions)
+            .then(response => response.json())
+            .then(jsonWorld => World.fromJson(jsonWorld))
+            .then(world => this.world = world);
+    }
+
+    #evolveWorld() {
+        const requestOptions = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(this.world)
+        };
+
+        return fetch("api/world/evolve", requestOptions)
+            .then(response => response.json())
+            .then(jsonWorld => World.fromJson(jsonWorld))
+            .then(world => this.world = world);
+    }
+}
+
 class World {
     constructor(animals, foods) {
         this.animals = animals;
         this.foods = foods;
+
+        this.age = 0;
     }
 
     process() {
         this.#processCollisions();
         this.#processBrains();
         this.#processMovements();
+
+        this.age++;
     }
 
     #processBrains() {
@@ -28,6 +91,8 @@ class World {
 
                 const distance =  animal.calculateDistance(food);
                 if (distance <= 0.02) {
+                    animal.satiation++;
+
                     food.position.x = Math.random();
                     food.position.y = Math.random();
                 }
@@ -59,6 +124,8 @@ class Animal {
         this.speed = speed;
         this.eye = eye;
         this.brain = brain;
+
+        this.satiation = 0;
     }
 
     processMovement() {
