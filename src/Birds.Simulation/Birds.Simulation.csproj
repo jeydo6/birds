@@ -1,5 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <ItemGroup>
-    <ProjectReference Include="..\Birds.Evolution\Birds.Evolution.csproj" />
+    <ProjectReference Include="..\Birds.Core\Birds.Core.csproj" />
   </ItemGroup>
+
 </Project>

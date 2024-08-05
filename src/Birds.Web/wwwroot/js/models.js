@@ -1,64 +1,6 @@
-class Simulation {
-
-    constructor() {
-        this.world = null;
-        this.generation = 0;
-        this.satiation = 0;
-    }
-
-    async process() {
-        if (!this.world) {
-            await this.#createWorld();
-        }
-
-        if (this.world.age > World.AGE_MAX) {
-            let satiation = 0;
-            for (const animal of this.world.animals) {
-                satiation += animal.satiation;
-            }
-
-            await this.#evolveWorld();
-
-            this.satiation = satiation;
-            this.generation++;
-        }
-
-        this.world.process();
-    }
-
-    getTitle() {
-        return `Generation ${this.generation} (${this.satiation})`;
-    }
-
-    #createWorld() {
-        const requestOptions = {
-            method: "GET"
-        };
-
-        return fetch("api/world/create", requestOptions)
-            .then(response => response.json())
-            .then(jsonWorld => World.fromJson(jsonWorld))
-            .then(world => this.world = world);
-    }
-
-    #evolveWorld() {
-        const requestOptions = {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(this.world)
-        };
-
-        return fetch("api/world/evolve", requestOptions)
-            .then(response => response.json())
-            .then(jsonWorld => World.fromJson(jsonWorld))
-            .then(world => this.world = world);
-    }
-}
-
 class World {
-    constructor(animals, foods) {
+    constructor(generation, animals, foods) {
+        this.generation = generation;
         this.animals = animals;
         this.foods = foods;
 
@@ -102,6 +44,8 @@ class World {
 
     static fromJson(json) {
 
+        const generation = json.generation;
+
         const animals = [];
         for (const jsonAnimal of json.animals) {
             animals.push(Animal.fromJson(jsonAnimal));
@@ -112,7 +56,7 @@ class World {
             foods.push(Food.fromJson(jsonFood));
         }
 
-        return new World(animals, foods);
+        return new World(generation, animals, foods);
     }
 }
 

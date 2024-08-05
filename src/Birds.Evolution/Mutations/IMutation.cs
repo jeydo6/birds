@@ -1,6 +1,6 @@
 namespace Birds.Evolution.Mutations;
 
-internal interface IMutation
+public interface IMutation
 {
     void Mutate(float[] genes);
 }

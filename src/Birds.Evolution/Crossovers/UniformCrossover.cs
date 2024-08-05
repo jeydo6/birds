@@ -4,7 +4,7 @@ using Birds.Evolution.Models;
 
 namespace Birds.Evolution.Crossovers;
 
-internal sealed class UniformCrossover : ICrossover
+public sealed class UniformCrossover : ICrossover
 {
     public float[] Crossover<TIndividual>(TIndividual parent1, TIndividual parent2)
         where TIndividual : IIndividual, new()

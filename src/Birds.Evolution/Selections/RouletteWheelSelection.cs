@@ -4,7 +4,7 @@ using Birds.Evolution.Models;
 
 namespace Birds.Evolution.Selections;
 
-internal sealed class RouletteWheelSelection : ISelection
+public sealed class RouletteWheelSelection : ISelection
 {
     public TIndividual Select<TIndividual>(TIndividual[] population) where TIndividual : IIndividual
     {

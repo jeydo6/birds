@@ -3,7 +3,7 @@ using Birds.Core.Extensions;
 
 namespace Birds.Evolution.Mutations;
 
-internal sealed class GaussianMutation : IMutation
+public sealed class GaussianMutation : IMutation
 {
     private readonly float _chance;
     private readonly float _coefficient;

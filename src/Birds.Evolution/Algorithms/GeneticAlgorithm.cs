@@ -12,7 +12,7 @@ public interface IGeneticAlgorithm<TIndividual>
     public TIndividual[] Evolve(TIndividual[] population);
 }
 
-internal sealed class GeneticAlgorithm<TIndividual> : IGeneticAlgorithm<TIndividual>
+public sealed class GeneticAlgorithm<TIndividual> : IGeneticAlgorithm<TIndividual>
     where TIndividual : IIndividual, new()
 {
     private readonly ISelection _selection;
