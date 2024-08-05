@@ -9,7 +9,7 @@ public sealed class RouletteWheelSelection : ISelection
     public TIndividual Select<TIndividual>(TIndividual[] population) where TIndividual : IIndividual
     {
         if (population.Length is 0)
-            throw new Exception("Популяция должна содержать хотя бы одну особь");
+            throw new Exception("The population must contain at least one individual");
 
         var totalFitness = 0f;
         for (var i = 0; i < population.Length; i++)

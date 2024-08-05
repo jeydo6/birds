@@ -10,7 +10,7 @@ public sealed class UniformCrossover : ICrossover
         where TIndividual : IIndividual, new()
     {
         if (parent1.Genes.Length != parent2.Genes.Length)
-            throw new Exception("Особи должны содержать одинаковое количество генов");
+            throw new Exception("Individuals must contain the same number of genes");
 
         var genes = new float[parent1.Genes.Length];
         for (var i = 0; i < genes.Length; i++)

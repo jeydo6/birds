@@ -1,6 +1,6 @@
 /**
- *
- * @param {World} world
+ * Draws the entire world including animals and food.
+ * @param {World} world - The world to be drawn.
  */
 CanvasRenderingContext2D.prototype.drawWorld = function (world) {
     this.clearRect(0, 0, viewportWidth, viewportHeight);
@@ -15,8 +15,8 @@ CanvasRenderingContext2D.prototype.drawWorld = function (world) {
 };
 
 /**
- *
- * @param {Animal} animal
+ * Draws a single animal on the canvas.
+ * @param {Animal} animal - The animal to be drawn.
  */
 CanvasRenderingContext2D.prototype.drawAnimal = function (animal) {
     const x = animal.position.x * viewportWidth;
@@ -51,11 +51,10 @@ CanvasRenderingContext2D.prototype.drawAnimal = function (animal) {
 };
 
 /**
- *
- * @param {Food} food
+ * Draws a single food item on the canvas.
+ * @param {Food} food - The food to be drawn.
  */
 CanvasRenderingContext2D.prototype.drawFood = function (food) {
-
     const x = food.position.x * viewportWidth;
     const y = food.position.y * viewportHeight;
     const radius = 0.005 * viewportWidth;

@@ -24,7 +24,7 @@ public sealed class NeuralNetwork
     public static NeuralNetwork FromWeights(int[] layerSizes, Span<float> weights)
     {
         if (layerSizes.Length < 2)
-            throw new Exception("Неверное количество слоёв");
+            throw new Exception("Incorrect number of layers");
 
         var layers = new Layer[layerSizes.Length - 1];
 
@@ -48,7 +48,7 @@ public sealed class NeuralNetwork
     public static NeuralNetwork Random(int[] layerSizes)
     {
         if (layerSizes.Length < 2)
-            throw new Exception("Неверное количество слоёв");
+            throw new Exception("Incorrect number of layers");
 
         var layers = new Layer[layerSizes.Length - 1];
         for (var i = 0; i < layers.Length; i++)

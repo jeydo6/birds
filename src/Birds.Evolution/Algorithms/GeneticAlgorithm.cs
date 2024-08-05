@@ -32,7 +32,7 @@ public sealed class GeneticAlgorithm<TIndividual> : IGeneticAlgorithm<TIndividua
     public TIndividual[] Evolve(TIndividual[] population)
     {
         if (population.Length is 0)
-            throw new Exception("Популяция должна содержать хотя бы одну особь");
+            throw new Exception("The population must contain at least one individual");
 
         var newPopulation = new TIndividual[population.Length];
         for (var i = 0; i < newPopulation.Length; i++)

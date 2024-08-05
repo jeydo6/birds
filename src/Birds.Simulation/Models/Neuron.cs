@@ -22,7 +22,7 @@ public sealed class Neuron
     public static Neuron FromWeights(int inputsCount, Span<float> inputWeights)
     {
         if (inputWeights.Length < inputsCount + 1)
-            throw new Exception("Неверное количество весов");
+            throw new Exception("Incorrect number of layers");
 
         var bias = inputWeights[0];
         var weights = inputWeights.Slice(1, inputsCount).ToArray();
