@@ -23,15 +23,15 @@ The main simulation logic is handled in `site.js`, which initializes the world a
 
 ### Classes
 
-	•	World: Represents the simulation world containing animals and food.
-	•	Animal: Represents a bird with properties such as position, rotation, and speed.
-	•	Food: Represents a food item in the world.
-	•	Eye: Handles the vision processing for animals.
-	•	NeuralNetwork, Layer, Neuron: Used for processing the brain logic of the animals.
+- **World**: Represents the simulation world containing animals and food.
+- **Animal**: Represents a bird with properties such as position, rotation, and speed.
+- **Food**: Represents a food item in the world.
+- **Eye**: Handles the vision processing for animals.
+- **NeuralNetwork**, **Layer**, **Neuron**: Used for processing the brain logic of the animals.
 
 ### Services
 
-	•	SimulationService: Handles API requests for creating and evolving the world.
+- **SimulationService**: Handles API requests for creating and evolving the world.
 
 ### Constants
 
