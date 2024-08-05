@@ -12,7 +12,7 @@ CanvasRenderingContext2D.prototype.drawWorld = function (world) {
     for (const food of world.foods) {
         this.drawFood(food);
     }
-}
+};
 
 /**
  *
@@ -28,7 +28,7 @@ CanvasRenderingContext2D.prototype.drawAnimal = function (animal) {
 
     this.moveTo(
         x + Math.cos(rotation) * size * 1.5,
-        y - Math.sin(rotation) * size * 1.5,
+        y - Math.sin(rotation) * size * 1.5
     );
 
     this.lineTo(
@@ -43,12 +43,12 @@ CanvasRenderingContext2D.prototype.drawAnimal = function (animal) {
 
     this.lineTo(
         x + Math.cos(rotation) * size * 1.5,
-        y - Math.sin(rotation) * size * 1.5,
+        y - Math.sin(rotation) * size * 1.5
     );
 
     this.strokeStyle = "rgb(107, 142, 35)";
     this.stroke();
-}
+};
 
 /**
  *
@@ -66,7 +66,7 @@ CanvasRenderingContext2D.prototype.drawFood = function (food) {
 
     this.fillStyle = "rgb(255, 36, 0)";
     this.fill();
-}
+};
 
 // Цвета
 // - Бирюзовый (Turquoise) - RGB: (64, 224, 208)

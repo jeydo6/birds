@@ -31,7 +31,7 @@ class World {
         for (const animal of this.animals) {
             for (const food of this.foods) {
 
-                const distance =  animal.calculateDistance(food);
+                const distance = animal.calculateDistance(food);
                 if (distance <= 0.02) {
                     animal.satiation++;
 
@@ -101,14 +101,14 @@ class Animal {
     }
 
     #clamp(value, minValue, maxValue) {
-        if (value < minValue) return minValue
-        else if (value > maxValue) return maxValue
+        if (value < minValue) return minValue;
+        else if (value > maxValue) return maxValue;
         else return value;
     }
 
     static fromJson(json) {
         const position = Point.fromJson(json.position);
-        const rotation = json.rotation
+        const rotation = json.rotation;
         const speed = json.speed;
 
         const eye = Eye.fromJson(json.eye);

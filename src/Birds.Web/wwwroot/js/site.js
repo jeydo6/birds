@@ -33,7 +33,7 @@ async function main() {
 
             world.process();
             context.drawWorld(world);
-        })
+        });
     }, 40);
 }
 

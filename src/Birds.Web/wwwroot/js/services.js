@@ -1,16 +1,16 @@
 class SimulationService {
 
-    async createWorld() {
+    createWorld() {
         const requestOptions = {
             method: "GET"
         };
 
-        return await fetch("api/simulation/create-world", requestOptions)
+        return fetch("api/simulation/create-world", requestOptions)
             .then(response => response.json())
             .then(jsonWorld => World.fromJson(jsonWorld));
     }
 
-    async evolveWorld(world) {
+    evolveWorld(world) {
         const requestOptions = {
             method: "POST",
             headers: {
@@ -19,12 +19,12 @@ class SimulationService {
             body: JSON.stringify(world)
         };
 
-        return await fetch("api/simulation/evolve-world", requestOptions)
+        return fetch("api/simulation/evolve-world", requestOptions)
             .then(response => response.json())
             .then(jsonWorld => World.fromJson(jsonWorld));
     }
 
-    async getTotalSatiation(world) {
+    getTotalSatiation(world) {
         const requestOptions = {
             method: "POST",
             headers: {
@@ -33,7 +33,7 @@ class SimulationService {
             body: JSON.stringify(world)
         };
 
-        return await fetch("api/simulation/get-total-satiation", requestOptions)
+        return fetch("api/simulation/get-total-satiation", requestOptions)
             .then(response => response.text());
     }
 }
